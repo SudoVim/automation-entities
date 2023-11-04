@@ -16,3 +16,14 @@ format-check:
 .PHONY: test
 test:
 	@py.test --cov=automation_entities --cov-report=term-missing .
+
+docs/_static:
+	mkdir -p docs/_static
+
+.PHONY: docs
+docs: docs/_static
+	@sphinx-build . docs/build -c docs/
+
+.PHONY: clean-docs
+clean-docs:
+	rm -rf docs/build
