@@ -1,11 +1,15 @@
-six
-selenium
-colorama
-sphinx
+#########
+# Library
+#########
 
-assertpy
+selenium>=4.15,<4.16    # interact with web pages automatically
+assertpy>=1.1,<1.2      # assert on the current state of entities
+requests>=2,<3          # making API requests
 
-requests
+#################
+# CI/CD utilities
+#################
 
-pip-check-updates       # Library for comparing installed versions to those in
-                        # pypi
+sphinx>=7,<8            # generate documentation
+pip-check-updates       # compare installed versions to those in pypi
+mypy>=1.6,<1.7          # static type checking

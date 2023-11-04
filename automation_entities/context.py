@@ -5,9 +5,8 @@ action.
 
 import os
 import json
+import typing
 import collections.abc
-
-import six
 
 class Subcontext(object):
     """
@@ -25,7 +24,10 @@ class Subcontext(object):
             `int` log position to save for the super context
     """
 
-    def __init__(self, context):
+    context: 'Context'
+    log_position: typing.Optional[int]
+
+    def __init__(self, context: 'Context'):
         self.context = context
         self.log_position = None
 
@@ -57,20 +59,23 @@ class Context(object):
         .. automethod:: log
     """
 
-    CONTEXT_DEPTH = 4
+    CONTEXT_DEPTH: int = 4
 
-    def __init__(self, config_defaults=None):
+    log_position: int
+    config: 'Config'
+
+    def __init__(self, config_defaults: typing.Optional[dict] = None):
         self.log_position = 0
         self.config = Config(defaults=config_defaults)
 
-    def log(self, message):
+    def log(self, message: str) -> None:
         """
             log given *message* to the context
         """
         spaces = " " * (self.log_position * self.CONTEXT_DEPTH)
-        six.print_(f"{spaces}{message}")
+        print(f"{spaces}{message}")
 
-    def subcontext(self, message) -> Subcontext:
+    def subcontext(self, message: str) -> 'Subcontext':
         """
             Log the given *message* to create a new subcontext. This method
             returns a context manager that will increment the
@@ -89,13 +94,13 @@ class Context(object):
         self.log(message)
         return Subcontext(self)
 
-    def set_config_file(self, filepath):
+    def set_config_file(self, filepath: str) -> None:
         """
             set config file to the given *filepath*
         """
         self.config.set_filepath(filepath)
 
-def patch_dict(original, patch):
+def patch_dict(original: dict, patch: dict) -> None:
     """
         Patch given *original* dict with the new *patch*. This function
         recursively iterates over all keys in the patch and applies them to
@@ -126,7 +131,11 @@ class Config(collections.abc.MutableMapping):
         .. automethod:: load
     """
 
-    def __init__(self, defaults=None):
+    filepath: typing.Optional[str]
+    defaults: typing.Optional[dict]
+    _data: dict
+
+    def __init__(self, defaults: typing.Optional[dict] = None):
         self.filepath = None
         self.defaults = defaults
         self._data = {}
@@ -134,23 +143,25 @@ class Config(collections.abc.MutableMapping):
         if self.defaults is not None:
             self.patch(self.defaults)
 
-    def patch(self, new_vals):
+    def patch(self, new_vals: dict) -> None:
         """
             patch given original ``dict`` with new values
         """
         patch_dict(self._data, new_vals)
 
-    def set_filepath(self, filepath):
+    def set_filepath(self, filepath: str) -> None:
         """
             set persistence filepath to *filepath*
         """
         self.filepath = filepath
         self.load()
 
-    def persist(self):
+    def persist(self) -> None:
         """
             persist new config to the file
         """
+        assert self.filepath is not None
+
         with open(self.filepath, 'w') as fobj:
             json.dump(
                 self._data,
@@ -159,29 +170,31 @@ class Config(collections.abc.MutableMapping):
                 indent=4,
             )
 
-    def load(self):
+    def load(self) -> None:
         """
             load config from file
         """
+        assert self.filepath is not None
+
         if os.path.isfile(self.filepath):
             with open(self.filepath) as fobj:
                 self.patch(json.load(fobj))
 
         self.persist()
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: typing.Any) -> typing.Any:
         return self._data.__getitem__(key)
 
-    def __setitem__(self, key, val):
+    def __setitem__(self, key: typing.Any, val: typing.Any) -> None:
         self._data.__setitem__(key, val)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: typing.Any) -> None:
         self._data.__delitem__(key)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator:
         return self._data.__iter__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._data.__len__()
 
 background = Context()
