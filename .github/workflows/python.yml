@@ -39,3 +39,8 @@ jobs:
 
     - name: Run tests
       run: python -m pytest --cov=automation_entities --cov-report=term-missing .
+
+    - name: Build docs
+      run: |
+        mkdir -p docs/build
+        python -m sphinx.cmd.build . docs/build -c docs/
