@@ -1,0 +1,11 @@
+six
+selenium
+colorama
+sphinx
+
+assertpy
+
+requests
+
+pip-check-updates       # Library for comparing installed versions to those in
+                        # pypi
