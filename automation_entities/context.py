@@ -8,26 +8,27 @@ import json
 import typing
 import collections.abc
 
+
 class Subcontext(object):
     """
-        object denoting a position lower down the context stack; this object
-        shouldn't be created directly but should be used by calling
-        :meth:`Context.subcontext`
+    object denoting a position lower down the context stack; this object
+    shouldn't be created directly but should be used by calling
+    :meth:`Context.subcontext`
 
-        .. attribute:: context
+    .. attribute:: context
 
-            :class:`Context` representing the context object this subcontext
-            came from
+        :class:`Context` representing the context object this subcontext
+        came from
 
-        .. attribute:: log_position
+    .. attribute:: log_position
 
-            `int` log position to save for the super context
+        `int` log position to save for the super context
     """
 
-    context: 'Context'
+    context: "Context"
     log_position: typing.Optional[int]
 
-    def __init__(self, context: 'Context'):
+    def __init__(self, context: "Context"):
         self.context = context
         self.log_position = None
 
@@ -39,30 +40,31 @@ class Subcontext(object):
     def __exit__(self, *args, **kwds):
         self.context.log_position = self.log_position
 
+
 class Context(object):
     """
-        The Context is an object that provides a common entrypoint into which
-        all information surrounding the current automated routine is sent.
+    The Context is an object that provides a common entrypoint into which
+    all information surrounding the current automated routine is sent.
 
-        :param dict config_defaults: default configuration values to give to
-            the :attr:`config` object
+    :param dict config_defaults: default configuration values to give to
+        the :attr:`config` object
 
-        .. attribute:: log_position
+    .. attribute:: log_position
 
-            ``int`` current subcontext depth
+        ``int`` current subcontext depth
 
-        .. attribute:: config
+    .. attribute:: config
 
-            :class:`Config` class representing the configuration of the current
-                context
+        :class:`Config` class representing the configuration of the current
+            context
 
-        .. automethod:: log
+    .. automethod:: log
     """
 
     CONTEXT_DEPTH: int = 4
 
     log_position: int
-    config: 'Config'
+    config: "Config"
 
     def __init__(self, config_defaults: typing.Optional[dict] = None):
         self.log_position = 0
@@ -70,42 +72,43 @@ class Context(object):
 
     def log(self, message: str) -> None:
         """
-            log given *message* to the context
+        log given *message* to the context
         """
         spaces = " " * (self.log_position * self.CONTEXT_DEPTH)
         print(f"{spaces}{message}")
 
-    def subcontext(self, message: str) -> 'Subcontext':
+    def subcontext(self, message: str) -> "Subcontext":
         """
-            Log the given *message* to create a new subcontext. This method
-            returns a context manager that will increment the
-            :attr:`log_position` on *__enter__* and decrement it back on
-            *__exit__*::
+        Log the given *message* to create a new subcontext. This method
+        returns a context manager that will increment the
+        :attr:`log_position` on *__enter__* and decrement it back on
+        *__exit__*::
 
-                >>> with ctx.subcontext("sub context"):
-                ...     ctx.log("subcontext message")
-                ...
-                sub context
-                    subcontext message
+            >>> with ctx.subcontext("sub context"):
+            ...     ctx.log("subcontext message")
+            ...
+            sub context
+                subcontext message
 
-            :rtype: Subcontext
-            :returns: subcontext object
+        :rtype: Subcontext
+        :returns: subcontext object
         """
         self.log(message)
         return Subcontext(self)
 
     def set_config_file(self, filepath: str) -> None:
         """
-            set config file to the given *filepath*
+        set config file to the given *filepath*
         """
         self.config.set_filepath(filepath)
 
+
 def patch_dict(original: dict, patch: dict) -> None:
     """
-        Patch given *original* dict with the new *patch*. This function
-        recursively iterates over all keys in the patch and applies them to
-        existing keys in the original. It does not replace a sub-dict. Rather,
-        it recursively replaces its keys.
+    Patch given *original* dict with the new *patch*. This function
+    recursively iterates over all keys in the patch and applies them to
+    existing keys in the original. It does not replace a sub-dict. Rather,
+    it recursively replaces its keys.
     """
     for k, v in patch.items():
         if k not in original or not isinstance(v, dict):
@@ -113,22 +116,23 @@ def patch_dict(original: dict, patch: dict) -> None:
         elif isinstance(v, dict):
             patch_dict(original[k], v)
 
+
 class Config(collections.abc.MutableMapping):
     """
-        The Config object represents the configuration of the current context.
-        It's used as a ``dict`` object and can be instantiated with default
-        values. If the :meth:`set_filepath` method is called, the :meth:`load`
-        and :meth:`persist` methods can be used to load configuration data from
-        the filepath and persist it to the filepath, respectively.
+    The Config object represents the configuration of the current context.
+    It's used as a ``dict`` object and can be instantiated with default
+    values. If the :meth:`set_filepath` method is called, the :meth:`load`
+    and :meth:`persist` methods can be used to load configuration data from
+    the filepath and persist it to the filepath, respectively.
 
-        .. attribute:: filepath
+    .. attribute:: filepath
 
-            ``str`` filepath containing the configuration
+        ``str`` filepath containing the configuration
 
-        .. automethod:: patch
-        .. automethod:: set_filepath
-        .. automethod:: persist
-        .. automethod:: load
+    .. automethod:: patch
+    .. automethod:: set_filepath
+    .. automethod:: persist
+    .. automethod:: load
     """
 
     filepath: typing.Optional[str]
@@ -145,24 +149,24 @@ class Config(collections.abc.MutableMapping):
 
     def patch(self, new_vals: dict) -> None:
         """
-            patch given original ``dict`` with new values
+        patch given original ``dict`` with new values
         """
         patch_dict(self._data, new_vals)
 
     def set_filepath(self, filepath: str) -> None:
         """
-            set persistence filepath to *filepath*
+        set persistence filepath to *filepath*
         """
         self.filepath = filepath
         self.load()
 
     def persist(self) -> None:
         """
-            persist new config to the file
+        persist new config to the file
         """
         assert self.filepath is not None
 
-        with open(self.filepath, 'w') as fobj:
+        with open(self.filepath, "w") as fobj:
             json.dump(
                 self._data,
                 fobj,
@@ -172,7 +176,7 @@ class Config(collections.abc.MutableMapping):
 
     def load(self) -> None:
         """
-            load config from file
+        load config from file
         """
         assert self.filepath is not None
 
@@ -196,5 +200,6 @@ class Config(collections.abc.MutableMapping):
 
     def __len__(self) -> int:
         return self._data.__len__()
+
 
 background = Context()
