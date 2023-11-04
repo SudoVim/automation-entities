@@ -21,3 +21,8 @@ class. This class provides a common point of entry for all log messages::
 
 In this way, an output trail can be described such that it's clear what's being
 called and what's calling what else.
+
+.. toctree::
+    :maxdepth: 2
+
+    context
