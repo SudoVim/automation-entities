@@ -32,13 +32,18 @@ class Subcontext(object):
         self.context = context
         self.log_position = None
 
-    def __enter__(self):
+    def __enter__(self) -> "Subcontext":
         self.log_position = self.context.log_position
         self.context.log_position += 1
         return self
 
-    def __exit__(self, *args, **kwds):
+    def __exit__(self, *args, **kwds) -> None:
+        assert (
+            self.log_position is not None
+        ), "__exit__ must only be called in conjunction with __enter__"
+
         self.context.log_position = self.log_position
+        self.log_position = None
 
 
 class Context(object):
@@ -164,7 +169,7 @@ class Config(collections.abc.MutableMapping):
         """
         persist new config to the file
         """
-        assert self.filepath is not None
+        assert self.filepath is not None, "filepath must be set before calling persist"
 
         with open(self.filepath, "w") as fobj:
             json.dump(
@@ -178,7 +183,7 @@ class Config(collections.abc.MutableMapping):
         """
         load config from file
         """
-        assert self.filepath is not None
+        assert self.filepath is not None, "filepath must be set before calling load"
 
         if os.path.isfile(self.filepath):
             with open(self.filepath) as fobj:
