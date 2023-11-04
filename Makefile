@@ -12,3 +12,7 @@ format:
 .PHONY: format-check
 format-check:
 	@git ls-files | grep "\.py$ " | xargs black --check
+
+.PHONY: test
+test:
+	@py.test --cov=automation_entities --cov-report=term-missing .

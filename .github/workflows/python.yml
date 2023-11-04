@@ -7,7 +7,7 @@ jobs:
 
     runs-on: ubuntu-22.04
     strategy:
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
@@ -36,3 +36,6 @@ jobs:
 
     - name: Check typing
       run: python -m mypy automation_entities
+
+    - name: Run tests
+      run: python -m pytest --cov=automation_entities --cov-report=term-missing .
