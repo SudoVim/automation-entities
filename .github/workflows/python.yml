@@ -3,7 +3,7 @@ name: Python CI
 on: [push]
 
 jobs:
-  build:
+  check-merge:
 
     runs-on: ubuntu-22.04
     strategy:
