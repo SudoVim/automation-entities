@@ -1,6 +1,7 @@
 """
-This module pertains to contexts. A context is an object that tracks the current
-action.
+The :mod:`automation_entities.context` module is primarily concerned with the
+:class:`Context` class. It contains the basic configuration and logging logic
+that will be expanded upon in the higher up :class:`entities.Entity` class.
 """
 
 import os
@@ -15,17 +16,14 @@ class Subcontext(object):
     shouldn't be created directly but should be used by calling
     :meth:`Context.subcontext`
 
-    .. attribute:: context
-
-        :class:`Context` representing the context object this subcontext
-        came from
-
-    .. attribute:: log_position
-
-        `int` log position to save for the super context
+    .. autoattribute:: context
+    .. autoattribute:: log_position
     """
 
+    #: the parent context
     context: "Context"
+
+    #: the log position to save for the parent context
     log_position: typing.Optional[int]
 
     def __init__(self, context: "Context"):
@@ -54,21 +52,23 @@ class Context(object):
     :param dict config_defaults: default configuration values to give to
         the :attr:`config` object
 
-    .. attribute:: log_position
+    .. autoattribute:: CONTEXT_DEPTH
 
-        ``int`` current subcontext depth
-
-    .. attribute:: config
-
-        :class:`Config` class representing the configuration of the current
-            context
+    .. autoattribute:: log_position
+    .. autoattribute:: config
 
     .. automethod:: log
+    .. automethod:: subcontext
+    .. automethod:: set_config_file
     """
 
+    #: the number of spaces to use when logging from this context
     CONTEXT_DEPTH: int = 4
 
+    #: the current log position
     log_position: int
+
+    #: the configuration represented by this context
     config: "Config"
 
     def __init__(self, config_defaults: typing.Optional[dict] = None):
