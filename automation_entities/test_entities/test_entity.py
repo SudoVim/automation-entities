@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, create_autospec, patch
 from ..context import Context
 from ..entities import Entity
 
-class BaseTestCase(unittest.TestCase):
 
+class BaseTestCase(unittest.TestCase):
     context: MagicMock
     entity: Entity
 
@@ -12,15 +12,15 @@ class BaseTestCase(unittest.TestCase):
         self.context = create_autospec(Context)
         self.entity = Entity(self.context, "MyEntity")
 
-class TestInteraction(BaseTestCase):
 
+class TestInteraction(BaseTestCase):
     def test_interaction(self) -> None:
         self.entity.interaction()
 
         self.context.subcontext.assert_called_once_with("MyEntity:")
 
-class TestRequest(BaseTestCase):
 
+class TestRequest(BaseTestCase):
     def test_no_message(self) -> None:
         sub_interaction = self.entity.request()
         self.assertEqual(self.context, sub_interaction.context)
@@ -35,8 +35,8 @@ class TestRequest(BaseTestCase):
 
         self.context.subcontext.assert_called_once_with("<<< request message")
 
-class TestResult(BaseTestCase):
 
+class TestResult(BaseTestCase):
     def test_no_message(self) -> None:
         sub_interaction = self.entity.result()
         self.assertEqual(self.context, sub_interaction.context)
@@ -51,8 +51,8 @@ class TestResult(BaseTestCase):
 
         self.context.subcontext.assert_called_once_with(">>> result message")
 
-class TestSleep(BaseTestCase):
 
+class TestSleep(BaseTestCase):
     @patch("time.sleep")
     def test_sleep(self, mock_sleep: MagicMock) -> None:
         self.entity.sleep(5.3)
