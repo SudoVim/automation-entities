@@ -74,3 +74,4 @@ A call to ``do_something`` could look like::
     context
     entities
     utils
+    web_browser/index
