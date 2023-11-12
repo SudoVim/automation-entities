@@ -2,14 +2,15 @@ import unittest
 from unittest.mock import MagicMock, create_autospec
 from ..context import Context, Subcontext
 from ..entities import Entity, SubInteraction
+from ..test_context import ContextTestCase
 
 
-class BaseTestCase(unittest.TestCase):
-    context: MagicMock
+class BaseTestCase(ContextTestCase):
     entity: Entity
 
     def setUp(self) -> None:
-        self.context = create_autospec(Context)
+        super().setUp()
+
         self.entity = create_autospec(Entity)
 
 
@@ -22,7 +23,13 @@ class TestInitialize(BaseTestCase):
             self.context.subcontext.return_value, sub_interaction.subcontext
         )
 
-        self.context.subcontext.assert_called_once_with("delim")
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "delim",
+                }
+            ]
+        )
 
     def test_with_message(self) -> None:
         sub_interaction = SubInteraction(
@@ -34,7 +41,13 @@ class TestInitialize(BaseTestCase):
             self.context.subcontext.return_value, sub_interaction.subcontext
         )
 
-        self.context.subcontext.assert_called_once_with("delim interaction message")
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "delim interaction message",
+                }
+            ]
+        )
 
 
 class SubInteractionTestCase(BaseTestCase):
@@ -68,4 +81,11 @@ class TestLog(SubInteractionTestCase):
     def test_log(self) -> None:
         self.sub_interaction.log("log message")
 
-        self.context.log.assert_called_once_with("log message")
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "delim",
+                    "log_messages": ["log message"],
+                }
+            ]
+        )

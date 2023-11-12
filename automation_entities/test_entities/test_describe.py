@@ -1,7 +1,7 @@
-import unittest
 from unittest.mock import MagicMock, create_autospec
 from ..entities import describe, Entity
 from ..context import Context, Subcontext
+from ..test_context import ContextTestCase
 
 
 class MyEntity(Entity):
@@ -11,12 +11,12 @@ class MyEntity(Entity):
         return f"{a}, {b}, {c}, {d}"
 
 
-class TestDescribe(unittest.TestCase):
+class TestDescribe(ContextTestCase):
     entity: MyEntity
-    context: MagicMock
 
     def setUp(self) -> None:
-        self.context = create_autospec(Context)
+        super().setUp()
+
         self.entity = MyEntity(self.context, "MyEntityName")
 
     def test_not_entity(self) -> None:
@@ -31,25 +31,39 @@ class TestDescribe(unittest.TestCase):
         cmp_return = inner(self.entity, "a", "b")
         self.assertEqual("a, b, default_c, default_d", cmp_return)
 
-        self.context.subcontext.assert_called_once_with("MyEntity.my_func('a', 'b'):")
-        self.context.log.assert_called_once_with("Return: 'a, b, default_c, default_d'")
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "MyEntity.my_func('a', 'b'):",
+                    "log_messages": ["Return: 'a, b, default_c, default_d'"],
+                }
+            ]
+        )
 
     def test_kwargs(self) -> None:
         inner = describe(MyEntity.my_func)
         cmp_return = inner(self.entity, "a", "b", c="cval", d="dval")
 
-        self.context.subcontext.assert_called_once_with(
-            "MyEntity.my_func('a', 'b', c='cval', d='dval'):"
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "MyEntity.my_func('a', 'b', c='cval', d='dval'):",
+                    "log_messages": ["Return: 'a, b, cval, dval'"],
+                }
+            ]
         )
-        self.context.log.assert_called_once_with("Return: 'a, b, cval, dval'")
 
     def test_too_long(self) -> None:
         inner = describe(MyEntity.my_func)
         cmp_return = inner(self.entity, "a" * 60, "b" * 60)
 
-        self.context.subcontext.assert_called_once_with(
-            "MyEntity.my_func('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...):"
-        )
-        self.context.log.assert_called_once_with(
-            "Return: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..."
+        self.assert_subcontexts(
+            [
+                {
+                    "message": "MyEntity.my_func('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...):",
+                    "log_messages": [
+                        "Return: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..."
+                    ],
+                }
+            ]
         )
