@@ -26,12 +26,12 @@ def describe(fcn: Callable) -> Callable:
         arg_str = ", ".join(arg_toks)
         if len(arg_str) > 100:
             arg_str = arg_str[:97] + "..."
-        with self.context.subcontext(f"{fcn.__qualname__}({arg_str}):"):
+        with self.context.subcontext(f"{fcn.__qualname__}({arg_str}):") as sctx:
             ret = fcn(self, *args, **kwds)
             ret_str = repr(ret)
             if len(ret_str) > 100:
                 ret_str = ret_str[:97] + "..."
-            self.context.log(f"Return: {ret_str}")
+            sctx.log(f"Return: {ret_str}")
             return ret
 
     return inner
@@ -76,7 +76,7 @@ class SubInteraction(object):
         """
         log given *msg* as a result of an interaction with an entity
         """
-        self.context.log(f"{msg}")
+        self.subcontext.log(msg)
 
 
 class Entity(object):

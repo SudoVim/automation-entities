@@ -14,3 +14,4 @@ pip-check-updates>=0.23.0,<0.24 # compare installed versions to those in pypi
 mypy>=1.6.1,<1.7                # static type checking
 black>=23.10.1,<24              # code formatting
 pytest-cov>=4.1.0,<5            # run tests
+assertpy==1.1

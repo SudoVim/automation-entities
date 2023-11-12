@@ -26,12 +26,27 @@ class Subcontext(object):
     #: the log position to save for the parent context
     log_position: typing.Optional[int]
 
+    already_entered: bool
+
     def __init__(self, context: "Context"):
         self.context = context
         self.log_position = None
+        self.already_entered = False
+
+    def log(self, msg: str) -> None:
+        """
+        Log given *msg* as a result of an interaction with this subcontext.
+        """
+        assert (
+            self.log_position is not None
+        ), "log must only be called in conjunction with __enter__"
+        self.context.log(msg)
 
     def __enter__(self) -> "Subcontext":
+        assert not self.already_entered, "a subcontext may only be entered once"
+
         self.log_position = self.context.log_position
+        self.already_entered = True
         self.context.log_position += 1
         return self
 
