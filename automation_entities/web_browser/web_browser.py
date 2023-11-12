@@ -60,7 +60,7 @@ class WebBrowser(Entity):
 
         self._driver = None
 
-        super().__init__(self.context, f"WebBrowser {self.baseurl}")
+        super().__init__(context, f"WebBrowser {self.baseurl}")
 
     def debug_info(self) -> WebBrowserDebugInfo:
         """
