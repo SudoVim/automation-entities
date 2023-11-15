@@ -21,6 +21,8 @@ class SecretString(str):
         return SECRET_STRING_DISPLAY
 
 
+Timeout = Optional[float]
+
 #: default timeout value for :func:`try_timeout`
 DEFAULT_TIMEOUT: Final[float] = 60.0
 
@@ -47,7 +49,7 @@ R = TypeVar("R")
 
 def try_timeout(
     fcn: Callable[[], R],
-    timeout: Optional[float] = None,
+    timeout: Timeout = None,
     step: Optional[float] = None,
     step_exp: Optional[float] = None,
     ignore_exceptions: Optional[Tuple] = None,
@@ -69,7 +71,7 @@ def try_timeout(
     function that includes the desired args and keywords.
 
     :param fcn: function to call
-    :param float timeout: number of seconds (or a fraction thereof) to
+    :param Timeout timeout: number of seconds (or a fraction thereof) to
         allow for the function to complete
     :param float step: number of seconds (or a fraction thereof) to wait
         between the first and second calls

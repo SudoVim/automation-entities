@@ -1,11 +1,11 @@
-import unittest
 from unittest.mock import MagicMock, create_autospec, call
 from ..context import Context
 from typing import List, NamedTuple, Iterator, Optional, Dict, Any
 from assertpy import assert_that
+from ..test_utils import UtilsTestCase
 
 
-class ContextTestCase(unittest.TestCase):
+class ContextTestCase(UtilsTestCase):
     """
     TestCase base class that presents an :attr:`context` and implements a
     :meth:`assert_subcontext` method that can be used to assert that the
@@ -124,7 +124,8 @@ class SubcontextComparison(NamedTuple):
         """
         Check and return if the given call *c* is a subcontext call.
         """
-        return f"{c}".startswith("call('")
+        repr_val = f"{c}"
+        return repr_val.startswith("call('") or repr_val.startswith('call("')
 
     @staticmethod
     def get_log_message(c: Any) -> str:
