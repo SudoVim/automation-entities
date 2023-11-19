@@ -1,5 +1,6 @@
 from .common import WebBrowserTestCase
 
+
 class TestCheckPage(WebBrowserTestCase):
     def test_not_equal(self) -> None:
         self.driver.current_url = "https://example.com/page"
@@ -10,15 +11,19 @@ class TestCheckPage(WebBrowserTestCase):
             [
                 {
                     "message": "WebBrowser https://example.com:",
-                    "subcontexts": [{
-                        "message": "<<< check_page",
-                        "subcontexts": [{
-                            "message": ">>>",
-                            "log_messages": [
-                                "URL: https://example.com/page",
+                    "subcontexts": [
+                        {
+                            "message": "<<< check_page",
+                            "subcontexts": [
+                                {
+                                    "message": ">>>",
+                                    "log_messages": [
+                                        "URL: https://example.com/page",
+                                    ],
+                                }
                             ],
-                        }],
-                    }],
+                        }
+                    ],
                 }
             ]
         )

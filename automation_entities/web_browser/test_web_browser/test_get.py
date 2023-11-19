@@ -3,6 +3,7 @@ from .common import WebBrowserTestCase
 from ...utils import TimedOut
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
+
 class TestGet(WebBrowserTestCase):
     @patch("automation_entities.web_browser.web_browser.try_timeout")
     def test_get(self, try_timeout: MagicMock) -> None:
@@ -36,15 +37,15 @@ class TestGet(WebBrowserTestCase):
         self.assert_try_timeout_partial(
             try_timeout.mock_calls[0],
             self.driver.get,
-            args=('https://some.site.example.com',),
-            timeout_kwargs={'ignore_exceptions': (TimeoutException,)},
+            args=("https://some.site.example.com",),
+            timeout_kwargs={"ignore_exceptions": (TimeoutException,)},
         )
         self.assert_try_timeout_partial(
             try_timeout.mock_calls[1],
             self.driver.find_element,
-            args=('xpath', '//h1'),
+            args=("xpath", "//h1"),
             timeout_kwargs={
-                'ignore_exceptions': (NoSuchElementException,),
-                'timeout': 2,
+                "ignore_exceptions": (NoSuchElementException,),
+                "timeout": 2,
             },
         )

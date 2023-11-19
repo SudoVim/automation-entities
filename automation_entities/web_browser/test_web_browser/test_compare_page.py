@@ -1,5 +1,6 @@
 from .common import WebBrowserTestCase
 
+
 class TestComparePage(WebBrowserTestCase):
     def test_wrong_scheme(self) -> None:
         self.driver.current_url = "http://example.com/page"
@@ -107,7 +108,11 @@ class TestComparePage(WebBrowserTestCase):
         self.driver.current_url = "https://subdomain.example.com/page"
 
         with self.web_browser.result() as result:
-            self.assertTrue(self.web_browser.compare_page(result, "/page", baseurl="https://subdomain.example.com"))
+            self.assertTrue(
+                self.web_browser.compare_page(
+                    result, "/page", baseurl="https://subdomain.example.com"
+                )
+            )
 
         self.assert_subcontexts(
             [

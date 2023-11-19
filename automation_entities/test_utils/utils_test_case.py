@@ -6,7 +6,6 @@ from assertpy import assert_that
 
 
 class UtilsTestCase(unittest.TestCase):
-
     def assert_try_timeout_partial(
         self,
         c: Any,
