@@ -37,6 +37,8 @@ class WebBrowser(Entity):
     .. automethod:: check_page
     .. automethod:: wait_page
     .. automethod:: wait_any_of_pages
+    .. automethod:: wait_not_page
+    .. automethod:: wait_none_of_pages
     """
 
     baseurl: str
@@ -240,4 +242,52 @@ class WebBrowser(Entity):
         baseurl: Optional[str] = None,
     ) -> None:
         if not any(self.compare_page(result, p, baseurl=baseurl) for p in pages):
+            raise TryAgain
+
+    def wait_not_page(
+        self, page: str, timeout: Timeout = None, baseurl: Optional[str] = None
+    ) -> None:
+        """
+        Wait until we are no longer on the given *page*.
+        """
+        with self.interaction():
+            self.request(f"wait_not_page {page} timeout={timeout} baseurl={baseurl}")
+            self._wait_none_of_pages((page,), timeout=timeout, baseurl=baseurl)
+
+    def wait_none_of_pages(
+        self,
+        pages: Tuple[str, ...],
+        timeout: Timeout = None,
+        baseurl: Optional[str] = None,
+    ) -> None:
+        """
+        Wait until we are no longer on any of the given *pages*.
+        """
+        with self.interaction():
+            self.request(
+                f"wait_none_of_pages {pages} timeout={timeout} baseurl={baseurl}"
+            )
+            self._wait_none_of_pages(pages, timeout=timeout, baseurl=baseurl)
+
+    def _wait_none_of_pages(
+        self,
+        pages: Tuple[str, ...],
+        timeout: Timeout = None,
+        baseurl: Optional[str] = None,
+    ) -> None:
+        with self.result() as result:
+            try_timeout(
+                functools.partial(
+                    self._wait_none_of_pages_fcn, result, pages, baseurl=baseurl
+                ),
+                timeout=timeout,
+            )
+
+    def _wait_none_of_pages_fcn(
+        self,
+        result: SubInteraction,
+        pages: Tuple[str, ...],
+        baseurl: Optional[str] = None,
+    ) -> None:
+        if any(self.compare_page(result, p, baseurl=baseurl) for p in pages):
             raise TryAgain
