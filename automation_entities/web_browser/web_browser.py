@@ -4,15 +4,20 @@ the web browser itself
 
 import functools
 import urllib.parse
-from typing import Optional, NamedTuple, Union, Tuple
+from typing import Optional, NamedTuple, Union, Tuple, List
 
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    StaleElementReferenceException,
+)
 
 from ..context import Context
 
 from ..utils import try_timeout, TimedOut, Timeout, TryAgain
-from ..entities import Entity, SubInteraction
+from ..entities import Entity, SubInteraction, describe
 from .driver import create_webdriver, Browser
 
 
@@ -39,6 +44,9 @@ class WebBrowser(Entity):
     .. automethod:: wait_any_of_pages
     .. automethod:: wait_not_page
     .. automethod:: wait_none_of_pages
+    .. automethod:: get_elements
+    .. automethod:: get_element
+    .. automethod:: get_element_retry
     """
 
     baseurl: str
@@ -291,3 +299,77 @@ class WebBrowser(Entity):
     ) -> None:
         if any(self.compare_page(result, p, baseurl=baseurl) for p in pages):
             raise TryAgain
+
+    def get_elements(self, xpath: str) -> List["Element"]:
+        """
+        Get and return all elements matching given *xpath*.
+        """
+        with self.interaction():
+            self.request(f"get_elements {xpath}")
+            elements = [
+                Element(self.context, e)
+                for e in self.driver.find_elements("xpath", xpath)
+            ]
+
+            with self.result() as result:
+                if len(elements) == 0:
+                    result.log("--nothing--")
+
+                else:
+                    for element in elements:
+                        result.log(f"{element}")
+
+                return elements
+
+    def get_element(self, xpath: str) -> "Element":
+        """
+        Get and return elements matching given *xpath*.
+        """
+        with self.interaction():
+            self.request(f"get_element {xpath}")
+            e = self.driver.find_element("xpath", xpath)
+
+            with self.result() as result:
+                element = Element(self.context, e)
+                result.log(f"{element}")
+                return element
+
+    @describe
+    def get_element_retry(self, xpath: str, timeout: Timeout = None) -> "Element":
+        """
+        Query the element denoted by the given *xpath* until it's discovered or
+        the given *timeout* is reached.
+        """
+        return try_timeout(
+            functools.partial(self.get_element, xpath),
+            ignore_exceptions=(
+                NoSuchElementException,
+                StaleElementReferenceException,
+            ),
+            timeout=timeout,
+        )
+
+
+class Element(Entity):
+    """
+    :class:`Entity` wrapping the
+    :class:`selenium.webdriver.remote.webelement.WebElement` component.
+
+    .. autoattribute:: element
+    """
+
+    #: selenium element to wrap
+    element: WebElement
+
+    def __init__(self, context, element):
+        self.element = element
+
+        super().__init__(context, "Element")
+
+    def __str__(self):
+        # TODO: This needs to be more informative
+        return "Element"
+
+    def __repr__(self):
+        # TODO: This needs to be more informative
+        return "Element"
