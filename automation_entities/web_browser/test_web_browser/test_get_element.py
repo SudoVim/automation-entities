@@ -30,4 +30,4 @@ class TestGetElement(WebBrowserTestCase):
             ]
         )
 
-        self.driver.find_element.assert_called_once_with('xpath', '//div')
+        self.driver.find_element.assert_called_once_with("xpath", "//div")

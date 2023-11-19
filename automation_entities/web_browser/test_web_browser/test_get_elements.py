@@ -27,7 +27,7 @@ class TestGetElements(WebBrowserTestCase):
             ]
         )
 
-        self.driver.find_elements.assert_called_once_with('xpath', '//div')
+        self.driver.find_elements.assert_called_once_with("xpath", "//div")
 
     def test_with_element(self) -> None:
         e = create_autospec(WebElement)
@@ -56,4 +56,4 @@ class TestGetElements(WebBrowserTestCase):
             ]
         )
 
-        self.driver.find_elements.assert_called_once_with('xpath', '//div')
+        self.driver.find_elements.assert_called_once_with("xpath", "//div")

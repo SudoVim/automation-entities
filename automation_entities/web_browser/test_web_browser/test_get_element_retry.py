@@ -9,7 +9,7 @@ from selenium.common.exceptions import (
 
 
 class TestGetElementRetry(WebBrowserTestCase):
-    @patch('automation_entities.web_browser.web_browser.try_timeout')
+    @patch("automation_entities.web_browser.web_browser.try_timeout")
     def test(self, try_timeout: MagicMock) -> None:
         element = Element(self.context, create_autospec(WebElement))
         try_timeout.return_value = element
@@ -30,12 +30,12 @@ class TestGetElementRetry(WebBrowserTestCase):
         self.assert_try_timeout_partial(
             try_timeout.mock_calls[0],
             self.web_browser.get_element,
-            args=('//div',),
+            args=("//div",),
             timeout_kwargs={
-                'ignore_exceptions': (
+                "ignore_exceptions": (
                     NoSuchElementException,
                     StaleElementReferenceException,
                 ),
-                'timeout': None,
+                "timeout": None,
             },
         )
