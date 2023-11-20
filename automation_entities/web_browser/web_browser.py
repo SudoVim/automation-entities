@@ -366,6 +366,56 @@ class Element(Entity):
 
         super().__init__(context, "Element")
 
+    def get_elements(self, xpath: str) -> List["Element"]:
+        """
+        Get and return all elements matching given *xpath*.
+        """
+        with self.interaction():
+            self.request(f"get_elements {xpath}")
+
+            elements = [
+                Element(self.context, e)
+                for e in self.element.find_elements("xpath", xpath)
+            ]
+
+            with self.result() as result:
+                if len(elements) == 0:
+                    result.log("--nothing--")
+
+                else:
+                    for element in elements:
+                        result.log(f"{element}")
+
+                return elements
+
+    def get_element(self, xpath: str) -> "Element":
+        """
+        get an elements matching given xpath
+        """
+        with self.interaction():
+            self.request(f"get_element {xpath}")
+
+            e = self.element.find_element("xpath", xpath)
+
+            with self.result() as result:
+                element = Element(self.context, e)
+                result.log(f"{element}")
+                return element
+
+    @describe
+    def get_element_retry(self, xpath: str, timeout: Timeout = None) -> "Element":
+        """
+        continually query the given element until success
+        """
+        return try_timeout(
+            functools.partial(self.get_element, xpath),
+            ignore_exceptions=(
+                NoSuchElementException,
+                StaleElementReferenceException,
+            ),
+            timeout=timeout,
+        )
+
     def __str__(self):
         # TODO: This needs to be more informative
         return "Element"
