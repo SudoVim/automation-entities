@@ -1,11 +1,9 @@
-from unittest.mock import create_autospec
 from .common import ElementTestCase
-from selenium.webdriver.remote.webelement import WebElement
 
 
 class TestGetElement(ElementTestCase):
     def test(self) -> None:
-        e = create_autospec(WebElement)
+        e = self.create_element_mock()
         self.mock_element.find_element.return_value = e
 
         element = self.element.get_element("//div")
@@ -14,14 +12,14 @@ class TestGetElement(ElementTestCase):
         self.assert_subcontexts(
             [
                 {
-                    "message": "Element:",
+                    "message": "<common />:",
                     "subcontexts": [
                         {
                             "message": "<<< get_element //div",
                             "subcontexts": [
                                 {
                                     "message": ">>>",
-                                    "log_messages": ["Element"],
+                                    "log_messages": ["<element />"],
                                 }
                             ],
                         }
