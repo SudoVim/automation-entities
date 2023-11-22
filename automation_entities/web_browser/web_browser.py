@@ -6,6 +6,7 @@ import functools
 import urllib.parse
 from typing import Optional, NamedTuple, Union, Tuple, List
 
+from assertpy import assert_that
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import (
@@ -16,7 +17,7 @@ from selenium.common.exceptions import (
 
 from ..context import Context
 
-from ..utils import try_timeout, TimedOut, Timeout, TryAgain
+from ..utils import try_timeout, TimedOut, Timeout, TryAgain, SecretString
 from ..entities import Entity, SubInteraction, describe
 from .driver import create_webdriver, Browser
 
@@ -356,6 +357,17 @@ class Element(Entity):
     :class:`selenium.webdriver.remote.webelement.WebElement` component.
 
     .. autoattribute:: element
+
+    .. automethod:: get_elements
+    .. automethod:: get_element
+    .. automethod:: get_element_retry
+    .. automethod:: get_attribute
+    .. automethod:: assert_attribute
+    .. automethod:: clear
+    .. automethod:: send_keys
+    .. automethod:: screenshot
+    .. automethod:: submit
+    .. automethod:: click
     """
 
     #: selenium element to wrap
@@ -415,6 +427,70 @@ class Element(Entity):
             ),
             timeout=timeout,
         )
+
+    def get_attribute(self, attr: str) -> Optional[str]:
+        """
+        Return the attribute denoted by the given *attr* string.
+        """
+        with self.interaction():
+            self.request(f"get_attribute {attr}")
+            with self.result() as result:
+                val = self.element.get_attribute(attr)
+                result.log(f"{val}")
+                return val
+
+    @describe
+    def assert_attribute(self, attr: str, val: str) -> None:
+        """
+        Assert that the given *attr* is the given *val*.
+        """
+        assert_that(self.get_attribute(attr)).is_equal_to(val)
+
+    def clear(self) -> None:
+        """
+        Clear the text in this element. This should be used for elements that
+        take user input.
+        """
+        with self.interaction():
+            self.request(f"clear")
+            self.element.clear()
+
+    def send_keys(self, keys: str, hidden: bool = False) -> None:
+        """
+        Send the given *keys* to the element and optionally hide them from
+        logging with the *hidden* keyword argument. This should be used for
+        elements that take user input.
+        """
+        hidden = hidden or isinstance(keys, SecretString)
+        keys = keys if not hidden else SecretString(keys)
+        print_val = repr(keys)
+        with self.interaction():
+            self.request(f"send_keys {print_val}")
+            self.element.send_keys(keys)
+
+    def screenshot(self, fname: str) -> None:
+        """
+        Take a screenshot of the given element and save it to *fname*.
+        """
+        with self.interaction():
+            self.request(f"screenshot {fname}")
+            self.element.screenshot(fname)
+
+    def submit(self) -> None:
+        """
+        Submit the given element. This should be used for form elements.
+        """
+        with self.interaction():
+            self.request("submit")
+            self.element.submit()
+
+    def click(self) -> None:
+        """
+        Click the given element.
+        """
+        with self.interaction():
+            self.request("click")
+            self.element.click()
 
     PRINT_ATTRS = ["name", "placeholder", "value"]
 
