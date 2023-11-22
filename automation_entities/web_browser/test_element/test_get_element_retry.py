@@ -1,6 +1,5 @@
-from unittest.mock import create_autospec, patch, MagicMock
+from unittest.mock import patch, MagicMock
 from .common import ElementTestCase
-from selenium.webdriver.remote.webelement import WebElement
 from ..web_browser import Element
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -11,7 +10,7 @@ from selenium.common.exceptions import (
 class TestGetElementRetry(ElementTestCase):
     @patch("automation_entities.web_browser.web_browser.try_timeout")
     def test(self, try_timeout: MagicMock) -> None:
-        element = Element(self.context, create_autospec(WebElement))
+        element = Element(self.context, self.create_element_mock())
         try_timeout.return_value = element
 
         cmp_element = self.element.get_element_retry("//div")
@@ -21,7 +20,7 @@ class TestGetElementRetry(ElementTestCase):
             [
                 {
                     "message": "Element.get_element_retry('//div'):",
-                    "log_messages": ["Return: Element"],
+                    "log_messages": ["Return: <element />"],
                 }
             ]
         )

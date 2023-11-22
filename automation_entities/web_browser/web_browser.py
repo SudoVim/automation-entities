@@ -364,7 +364,7 @@ class Element(Entity):
     def __init__(self, context, element):
         self.element = element
 
-        super().__init__(context, "Element")
+        super().__init__(context, f"{self}")
 
     def get_elements(self, xpath: str) -> List["Element"]:
         """
@@ -416,10 +416,31 @@ class Element(Entity):
             timeout=timeout,
         )
 
-    def __str__(self):
-        # TODO: This needs to be more informative
-        return "Element"
+    PRINT_ATTRS = ["name", "placeholder", "value"]
 
-    def __repr__(self):
-        # TODO: This needs to be more informative
-        return "Element"
+    def __str__(self) -> str:
+        print_attrs = {}
+        for attr in self.PRINT_ATTRS:
+            val = self.element.get_attribute(attr)
+            if val:
+                print_attrs[attr] = val
+
+        def format_attrs():
+            if not print_attrs:
+                return ""
+
+            return " " + (
+                " ".join(f"{k}={repr(v)}" for k, v in sorted(print_attrs.items()))
+            )
+
+        text = self.element.text
+        if len(text) > 100:
+            text = text[:97] + "..."
+        if self.element.text:
+            return f"<{self.element.tag_name}{format_attrs()}>{text}</{self.element.tag_name}>"
+
+        else:
+            return f"<{self.element.tag_name}{format_attrs()} />"
+
+    def __repr__(self) -> str:
+        return self.__str__()

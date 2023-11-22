@@ -1,6 +1,4 @@
-from unittest.mock import create_autospec
 from .common import WebBrowserTestCase
-from selenium.webdriver.remote.webelement import WebElement
 
 
 class TestGetElements(WebBrowserTestCase):
@@ -30,7 +28,7 @@ class TestGetElements(WebBrowserTestCase):
         self.driver.find_elements.assert_called_once_with("xpath", "//div")
 
     def test_with_element(self) -> None:
-        e = create_autospec(WebElement)
+        e = self.create_element_mock()
         self.driver.find_elements.return_value = [e]
 
         elements = self.web_browser.get_elements("//div")
@@ -47,7 +45,7 @@ class TestGetElements(WebBrowserTestCase):
                             "subcontexts": [
                                 {
                                     "message": ">>>",
-                                    "log_messages": ["Element"],
+                                    "log_messages": ["<element />"],
                                 }
                             ],
                         }
