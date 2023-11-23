@@ -4,6 +4,7 @@
 
 selenium>=4.15.2,<4.16  # interact with web pages automatically
 requests>=2.31.0,<3     # making API requests
+assertpy>=1.1,<2        # descriptive asserting on values
 
 #################
 # CI/CD utilities
@@ -14,4 +15,3 @@ pip-check-updates>=0.23.0,<0.24 # compare installed versions to those in pypi
 mypy>=1.6.1,<1.7                # static type checking
 black>=23.10.1,<24              # code formatting
 pytest-cov>=4.1.0,<5            # run tests
-assertpy==1.1
