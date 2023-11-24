@@ -6,6 +6,12 @@ selenium>=4.15.2,<4.16  # interact with web pages automatically
 requests>=2.31.0,<3     # making API requests
 assertpy>=1.1,<2        # descriptive asserting on values
 
+#########
+# Types
+#########
+
+types-requests>=2.31.0.10,<3
+
 #################
 # CI/CD utilities
 #################

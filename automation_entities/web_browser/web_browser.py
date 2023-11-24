@@ -2,6 +2,7 @@
 the web browser itself
 """
 
+import requests
 import functools
 import urllib.parse
 from typing import Optional, NamedTuple, Union, Tuple, List
@@ -46,9 +47,15 @@ class WebBrowser(Entity):
     .. automethod:: wait_any_of_pages
     .. automethod:: wait_not_page
     .. automethod:: wait_none_of_pages
+
     .. automethod:: get_elements
     .. automethod:: get_element
     .. automethod:: get_element_retry
+
+    .. automethod:: move_to
+    .. automethod:: click
+
+    .. automethod:: download_file
     """
 
     baseurl: str
@@ -366,6 +373,29 @@ class WebBrowser(Entity):
         with self.interaction():
             self.request(f"click")
             ActionChains(self.driver).click().perform()
+
+    def download_file(self, src: str, filepath: str) -> None:
+        """
+        Download the file with the given *src* URL to the given *filepath*.
+        This method will use the same User-Agent and cookies as the browser so
+        that it seems like the action is being performed by the same user.
+        """
+        with self.interaction():
+            self.request(f"download_file {src} -> {filepath}")
+
+            s = requests.session()
+
+            user_agent = self.driver.execute_script("return navigator.userAgent;")
+            headers = {"User-Agent": user_agent}
+            s.headers.update(headers)
+
+            for cookie in self.driver.get_cookies():
+                c = {cookie["name"]: cookie["value"]}
+                s.cookies.update(c)
+
+            r = s.get(src, allow_redirects=True)
+            with open(filepath, "wb") as fobj:
+                fobj.write(r.content)
 
 
 class Element(Entity):
