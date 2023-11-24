@@ -14,6 +14,7 @@ from selenium.common.exceptions import (
     TimeoutException,
     StaleElementReferenceException,
 )
+from selenium.webdriver.common.action_chains import ActionChains
 
 from ..context import Context
 
@@ -349,6 +350,22 @@ class WebBrowser(Entity):
             ),
             timeout=timeout,
         )
+
+    def move_to(self, element: "Element") -> None:
+        """
+        Move to the given *element*.
+        """
+        with self.interaction():
+            self.request(f"move_to {element}")
+            ActionChains(self.driver).move_to_element(element.element).perform()
+
+    def click(self) -> None:
+        """
+        Click wherever the cursor currently is.
+        """
+        with self.interaction():
+            self.request(f"click")
+            ActionChains(self.driver).click().perform()
 
 
 class Element(Entity):
