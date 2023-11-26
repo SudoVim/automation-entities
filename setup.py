@@ -33,6 +33,9 @@ setup(
         "automation_entities",
         "automation_entities.web_browser",
     ],
+    package_data={
+        "automation_entities": ["py.typed"],
+    },
     python_requires=">=3.8, <4",
     install_requires=[
         "selenium>=4",
