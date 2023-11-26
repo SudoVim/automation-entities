@@ -35,7 +35,6 @@ setup(
     ],
     package_data={
         "automation_entities": ["py.typed"],
-        "automation_entities.context": ["py.typed"],
     },
     python_requires=">=3.8, <4",
     install_requires=[
