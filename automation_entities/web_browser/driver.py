@@ -38,6 +38,6 @@ def create_webdriver(
     Create a webdriver from the given arguments.
     """
     if browser == "chrome":
-        return create_chrome_webdriver(headless=headless)
+        return create_chrome_webdriver(headless=headless, user_data_dir=user_data_dir)
 
     assert False, f"invalid browser type {browser}"
