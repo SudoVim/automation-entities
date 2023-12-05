@@ -4,3 +4,4 @@ docs/build/*
 automation_entities.egg-info/*
 build/*
 dist/*
+run.py
