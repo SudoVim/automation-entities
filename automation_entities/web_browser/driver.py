@@ -5,6 +5,7 @@ from typing import Literal, Optional
 
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
+import undetected_chromedriver as uc
 
 Browser = Literal["chrome"]
 
@@ -12,7 +13,7 @@ Browser = Literal["chrome"]
 def create_chrome_webdriver(
     headless: bool = False,
     user_data_dir: Optional[str] = None,
-) -> webdriver.Chrome:
+) -> uc.Chrome:
     """
     Create and return a chrome webdriver from the given arguments.
     """
@@ -26,7 +27,7 @@ def create_chrome_webdriver(
     if headless:
         options.add_argument("--headless")
 
-    return webdriver.Chrome(
+    return uc.Chrome(
         options=options,
     )
 
