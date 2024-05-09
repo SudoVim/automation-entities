@@ -23,8 +23,8 @@ jobs:
       uses: actions/cache@v3
       id: cache
       with:
-        path: ${{ env.LD_LIBRARY_PATH }}/python${{ matrix.python-version }}/site-packages
-        key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/requirements-lock.txt') }}
+        path: /home/runner/.local/share/virtualenvs
+        key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/Pipfile.lock') }}
 
     - name: Install Dependencies
       run: |
