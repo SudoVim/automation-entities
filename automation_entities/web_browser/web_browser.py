@@ -5,7 +5,7 @@ the web browser itself
 import requests
 import functools
 import urllib.parse
-from typing import Optional, NamedTuple, Union, Tuple, List
+from typing import Optional, NamedTuple, Union, Tuple, List, Iterator
 
 from assertpy import assert_that
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -366,6 +366,14 @@ class WebBrowser(Entity):
             self.request(f"move_to {element}")
             ActionChains(self.driver).move_to_element(element.element).perform()
 
+    def scroll(self, x: int = 0, y: int = 0) -> None:
+        """
+        Scroll by the given amount
+        """
+        with self.interaction():
+            self.request(f"scroll x={x} y={y}")
+            ActionChains(self.driver).scroll_by_amount(x, y).perform()
+
     def click(self) -> None:
         """
         Click wherever the cursor currently is.
@@ -446,6 +454,15 @@ class Element(Entity):
                         result.log(f"{element}")
 
                 return elements
+
+    def iter_elements(self, xpath: str) -> Iterator["Element"]:
+        with self.interaction():
+            self.request(f"iter_elements {xpath}")
+            with self.result() as result:
+                for e in self.element.find_elements("xpath", xpath):
+                    element = Element(self.context, e)
+                    result.log(f"{element}")
+                    yield element
 
     def get_element(self, xpath: str) -> "Element":
         """
