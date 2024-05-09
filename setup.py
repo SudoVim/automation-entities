@@ -38,9 +38,10 @@ setup(
     },
     python_requires=">=3.8, <4",
     install_requires=[
-        "selenium>=4",
-        "requests>=2",
-        "assertpy>=1",
+        "selenium<4.16,>=4.15.2",
+        "requests<3,>=2.31.0",
+        "assertpy<2,>=1.1",
+        "undetected-chromedriver<4,>=3.5.4",
     ],
     project_urls={
         "Bug Reports": "https://github.com/SudoVim/automation-entities/issues",

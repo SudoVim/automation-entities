@@ -2,9 +2,10 @@
 # Library
 #########
 
-selenium>=4.15.2,<4.16  # interact with web pages automatically
-requests>=2.31.0,<3     # making API requests
-assertpy>=1.1,<2        # descriptive asserting on values
+selenium>=4.15.2,<4.16              # interact with web pages automatically
+requests>=2.31.0,<3                 # making API requests
+assertpy>=1.1,<2                    # descriptive asserting on values
+undetected-chromedriver>=3.5.4,<4   # browse chrome undetected
 
 #########
 # Types

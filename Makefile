@@ -1,28 +1,31 @@
+.PHONY: all
+all: check test docs
+
 .PHONY: check
 check: mypy format-check
 
 .PHONY: mypy
 mypy:
-	@mypy automation_entities
+	@pipenv run mypy automation_entities
 
 .PHONY: format
 format:
-	@git ls-files | grep "\.py$ " | xargs black
+	@git ls-files | grep "\.py$ " | xargs pipenv run black
 
 .PHONY: format-check
 format-check:
-	@git ls-files | grep "\.py$ " | xargs black --check
+	@git ls-files | grep "\.py$ " | xargs pipenv run black --check
 
 .PHONY: test
 test:
-	@py.test --cov=automation_entities --cov-report=term-missing .
+	@pipenv run py.test --cov=automation_entities --cov-report=term-missing .
 
 docs/_static:
 	mkdir -p docs/_static
 
 .PHONY: docs
 docs: docs/_static
-	@sphinx-build . docs/build -c docs/
+	@pipenv run sphinx-build . docs/build -c docs/
 
 .PHONY: clean-docs
 clean-docs:

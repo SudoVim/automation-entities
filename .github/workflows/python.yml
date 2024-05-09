@@ -28,19 +28,19 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-lock.txt
+        python -m pip install --upgrade pip pipenv
+        pipenv install --dev
 
     - name: Check formatting
-      run: git ls-files | grep "\.py$" | xargs python -m black --check
+      run: git ls-files | grep "\.py$" | xargs pipenv run black --check
 
     - name: Check typing
-      run: python -m mypy automation_entities
+      run: pipenv run mypy automation_entities
 
     - name: Run tests
-      run: python -m pytest --cov=automation_entities --cov-report=term-missing .
+      run: pipenv run pytest --cov=automation_entities --cov-report=term-missing .
 
     - name: Build docs
       run: |
         mkdir -p docs/build
-        python -m sphinx.cmd.build . docs/build -c docs/
+        pipenv run sphinx.cmd.build . docs/build -c docs/
