@@ -32,15 +32,15 @@ jobs:
         pipenv install --dev
 
     - name: Check formatting
-      run: git ls-files | grep "\.py$" | xargs pipenv run black --check
+      run: git ls-files | grep "\.py$" | xargs pipenv run python -m black --check
 
     - name: Check typing
-      run: pipenv run mypy automation_entities
+      run: pipenv run python -m mypy automation_entities
 
     - name: Run tests
-      run: pipenv run pytest --cov=automation_entities --cov-report=term-missing .
+      run: pipenv run python -m pytest --cov=automation_entities --cov-report=term-missing .
 
     - name: Build docs
       run: |
         mkdir -p docs/build
-        pipenv run sphinx.cmd.build . docs/build -c docs/
+        pipenv run python -m sphinx.cmd.build . docs/build -c docs/
