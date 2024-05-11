@@ -7,13 +7,14 @@ from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 import undetected_chromedriver as uc
 
-Browser = Literal["chrome"]
+Browser = Literal["chrome", "undetected-chrome"]
 
 
 def create_chrome_webdriver(
     headless: bool = False,
     user_data_dir: Optional[str] = None,
-) -> uc.Chrome:
+    use_undetected: bool = False,
+) -> webdriver.Chrome:
     """
     Create and return a chrome webdriver from the given arguments.
     """
@@ -27,9 +28,12 @@ def create_chrome_webdriver(
     if headless:
         options.add_argument("--headless")
 
-    return uc.Chrome(
-        options=options,
-    )
+    if use_undetected:
+        return uc.Chrome(
+            options=options,
+        )
+
+    return webdriver.Chrome(options=options)
 
 
 def create_webdriver(
@@ -41,4 +45,7 @@ def create_webdriver(
     if browser == "chrome":
         return create_chrome_webdriver(headless=headless, user_data_dir=user_data_dir)
 
-    assert False, f"invalid browser type {browser}"
+    if browser == "undetected-chrome":
+        return create_chrome_webdriver(
+            headless=headless, user_data_dir=user_data_dir, use_undetected=True
+        )
