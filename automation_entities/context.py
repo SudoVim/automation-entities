@@ -8,9 +8,10 @@ import os
 import json
 import typing
 import collections.abc
+from typing_extensions import Self
 
 
-class Subcontext(object):
+class Subcontext:
     """
     object denoting a position lower down the context stack; this object
     shouldn't be created directly but should be used by calling
@@ -59,7 +60,7 @@ class Subcontext(object):
         self.log_position = None
 
 
-class Context(object):
+class Context:
     """
     The Context is an object that provides a common entrypoint into which
     all information surrounding the current automated routine is sent.
@@ -83,11 +84,18 @@ class Context(object):
     #: the current log position
     log_position: int
 
+    subcontext_class: typing.Type["Subcontext"]
+
     #: the configuration represented by this context
     config: "Config"
 
-    def __init__(self, config_defaults: typing.Optional[dict] = None):
+    def __init__(
+        self,
+        config_defaults: typing.Optional[dict] = None,
+        subcontext_class: typing.Optional[typing.Type["Subcontext"]] = None,
+    ) -> None:
         self.log_position = 0
+        self.subcontext_class = subcontext_class or Subcontext
         self.config = Config(defaults=config_defaults)
 
     def log(self, message: str) -> None:
@@ -97,7 +105,7 @@ class Context(object):
         spaces = " " * (self.log_position * self.CONTEXT_DEPTH)
         print(f"{spaces}{message}")
 
-    def subcontext(self, message: str) -> "Subcontext":
+    def subcontext(self, message: str) -> Subcontext:
         """
         Log the given *message* to create a new subcontext. This method
         returns a context manager that will increment the
@@ -114,7 +122,7 @@ class Context(object):
         :returns: subcontext object
         """
         self.log(message)
-        return Subcontext(self)
+        return self.subcontext_class(self)
 
     def set_config_file(self, filepath: str) -> None:
         """
