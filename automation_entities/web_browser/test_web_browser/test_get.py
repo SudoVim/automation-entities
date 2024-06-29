@@ -1,7 +1,9 @@
-from unittest.mock import patch, MagicMock
-from .common import WebBrowserTestCase
+from unittest.mock import MagicMock, patch
+
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
 from ...utils import TimedOut
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from .common import WebBrowserTestCase
 
 
 class TestGet(WebBrowserTestCase):

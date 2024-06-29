@@ -1,5 +1,6 @@
+from unittest.mock import MagicMock, call, patch
+
 from .common import WebBrowserTestCase
-from unittest.mock import patch, MagicMock, call
 
 
 class TestDownloadFile(WebBrowserTestCase):

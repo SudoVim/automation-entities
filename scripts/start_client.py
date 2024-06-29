@@ -3,8 +3,8 @@
 Start the client for testing
 """
 
-import sys
 import argparse
+import sys
 
 sys.path.append(".")
 

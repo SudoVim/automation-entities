@@ -1,7 +1,9 @@
-from unittest.mock import patch, MagicMock, create_autospec
-from .common import WebBrowserTestCase
-from ...utils import TimedOut
+from unittest.mock import MagicMock, create_autospec, patch
+
 from selenium.webdriver.remote.webelement import WebElement
+
+from ...utils import TimedOut
+from .common import WebBrowserTestCase
 
 
 class TestPageInfoResult(WebBrowserTestCase):

@@ -1,5 +1,6 @@
-from .common import ElementTestCase
 from unittest.mock import call
+
+from .common import ElementTestCase
 
 
 class TestGetAttribute(ElementTestCase):

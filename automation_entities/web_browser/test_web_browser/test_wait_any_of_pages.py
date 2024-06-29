@@ -1,6 +1,7 @@
-from .common import WebBrowserTestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from ...utils import TryAgain
+from .common import WebBrowserTestCase
 
 
 class TestWaitAnyOfPages(WebBrowserTestCase):

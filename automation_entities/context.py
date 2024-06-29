@@ -4,10 +4,11 @@ The :mod:`automation_entities.context` module is primarily concerned with the
 that will be expanded upon in the higher up :class:`entities.Entity` class.
 """
 
-import os
-import json
-import typing
 import collections.abc
+import json
+import os
+import typing
+
 from typing_extensions import Self
 
 

@@ -1,4 +1,5 @@
 from unittest.mock import MagicMock, patch
+
 from ..entities import Entity
 from ..test_context import ContextTestCase
 

@@ -1,8 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, create_autospec, call
-from ..context import Context
-from typing import List, NamedTuple, Iterator, Optional, Dict, Any, Callable, Tuple
-from assertpy import assert_that
+from typing import Any, Callable, Dict, Optional, Tuple
 
 
 class UtilsTestCase(unittest.TestCase):

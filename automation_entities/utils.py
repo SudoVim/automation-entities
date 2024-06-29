@@ -4,8 +4,7 @@ library - namely, the :func:`try_timeout` function.
 """
 
 import time
-
-from typing import Callable, Optional, Tuple, Final, Any, TypeVar
+from typing import Any, Callable, Final, Optional, Tuple, TypeVar
 
 #: default value to display for a :class:`SecretString`
 SECRET_STRING_DISPLAY: Final[str] = "'" + ("*" * 10) + "'"

@@ -1,5 +1,6 @@
+from unittest.mock import MagicMock, patch
+
 from .common import WebBrowserTestCase
-from unittest.mock import patch, MagicMock
 
 
 class TestWaitNotPage(WebBrowserTestCase):

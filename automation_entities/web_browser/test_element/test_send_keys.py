@@ -1,5 +1,5 @@
-from .common import ElementTestCase
 from ...utils import SecretString
+from .common import ElementTestCase
 
 
 class TestSendKeys(ElementTestCase):

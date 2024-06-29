@@ -1,9 +1,11 @@
-from ...context import Context
-from selenium.webdriver.remote.webelement import WebElement
-from ..web_browser import Element
-from unittest.mock import MagicMock, create_autospec
-from ...test_context import ContextTestCase
 from typing import Dict
+from unittest.mock import MagicMock, create_autospec
+
+from selenium.webdriver.remote.webelement import WebElement
+
+from ...context import Context
+from ...test_context import ContextTestCase
+from ..web_browser import Element
 
 
 class ElementTestCase(ContextTestCase):
