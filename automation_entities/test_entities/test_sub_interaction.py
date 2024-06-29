@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, create_autospec
+
 from ..context import Context, Subcontext
 from ..entities import Entity, SubInteraction
 from ..test_context import ContextTestCase

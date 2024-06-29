@@ -1,6 +1,7 @@
-from unittest.mock import patch, MagicMock
-from .common import WebBrowserTestCase
+from unittest.mock import MagicMock, patch
+
 from ...utils import TimedOut
+from .common import WebBrowserTestCase
 
 
 class TestRefresh(WebBrowserTestCase):

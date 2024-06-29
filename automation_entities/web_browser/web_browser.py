@@ -2,26 +2,23 @@
 the web browser itself
 """
 
-import requests
 import functools
 import urllib.parse
-from typing import Optional, NamedTuple, Union, Tuple, List, Iterator
+from typing import Iterator, List, NamedTuple, Optional, Tuple, Union
 
+import requests
 from assertpy import assert_that
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException,
+                                        TimeoutException)
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    TimeoutException,
-    StaleElementReferenceException,
-)
-from selenium.webdriver.common.action_chains import ActionChains
 
 from ..context import Context
-
-from ..utils import try_timeout, TimedOut, Timeout, TryAgain, SecretString
 from ..entities import Entity, SubInteraction, describe
-from .driver import create_webdriver, Browser
+from ..utils import SecretString, TimedOut, Timeout, TryAgain, try_timeout
+from .driver import Browser, create_webdriver
 
 
 class WebBrowser(Entity):

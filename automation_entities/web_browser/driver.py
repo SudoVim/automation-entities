@@ -3,9 +3,9 @@ module containing logic for creating the selenium webdriver
 """
 from typing import Literal, Optional
 
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
-import undetected_chromedriver as uc
 
 Browser = Literal["chrome", "undetected-chrome"]
 

@@ -3,10 +3,9 @@ An entity is something that can be interacted with. This abstraction will be
 used as a way to log interactions with remote components.
 """
 
-import time
 import functools
-
-from typing import Callable, Any, Optional
+import time
+from typing import Any, Callable, Optional
 
 from .context import Context, Subcontext
 

@@ -1,10 +1,10 @@
-from unittest.mock import patch, MagicMock
-from .common import ElementTestCase
+from unittest.mock import MagicMock, patch
+
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException)
+
 from ..web_browser import Element
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    StaleElementReferenceException,
-)
+from .common import ElementTestCase
 
 
 class TestGetElementRetry(ElementTestCase):

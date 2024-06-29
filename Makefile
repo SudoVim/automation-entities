@@ -10,11 +10,13 @@ mypy:
 
 .PHONY: format
 format:
-	@git ls-files | grep "\.py$ " | xargs pipenv run black
+	@pipenv run black
+	@pipenv run isort
 
 .PHONY: format-check
 format-check:
-	@git ls-files | grep "\.py$ " | xargs pipenv run black --check
+	@pipenv run black --check
+	@pipenv run isort --check
 
 .PHONY: test
 test:

@@ -1,6 +1,7 @@
 import unittest
-from ..utils import try_timeout, TryAgain, TimedOut
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import MagicMock, call, patch
+
+from ..utils import TimedOut, TryAgain, try_timeout
 
 
 class TestTryTimeout(unittest.TestCase):

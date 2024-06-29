@@ -1,8 +1,10 @@
-from ...context import Context
-from selenium.webdriver.remote.webdriver import WebDriver
-from ..web_browser import WebBrowser
 from unittest.mock import MagicMock, create_autospec
+
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from ...context import Context
 from ..test_element.common import ElementTestCase
+from ..web_browser import WebBrowser
 
 
 class WebBrowserTestCase(ElementTestCase):
