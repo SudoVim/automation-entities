@@ -34,7 +34,7 @@ jobs:
     - name: Check formatting
       run: |
         pipenv run black --check .
-        pipenv run isort --check .
+        pipenv run isort --profile black --check-only .
 
     - name: Check typing
       run: pipenv run python -m mypy automation_entities

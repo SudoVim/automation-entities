@@ -10,13 +10,13 @@ mypy:
 
 .PHONY: format
 format:
-	@pipenv run black
-	@pipenv run isort
+	@pipenv run isort --profile black .
+	@pipenv run black .
 
 .PHONY: format-check
 format-check:
-	@pipenv run black --check
-	@pipenv run isort --check
+	@pipenv run isort --profile black --check-only .
+	@pipenv run black --check .
 
 .PHONY: test
 test:

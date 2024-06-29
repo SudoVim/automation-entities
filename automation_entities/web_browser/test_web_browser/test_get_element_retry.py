@@ -1,7 +1,9 @@
 from unittest.mock import MagicMock, patch
 
-from selenium.common.exceptions import (NoSuchElementException,
-                                        StaleElementReferenceException)
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 
 from ..web_browser import Element
 from .common import WebBrowserTestCase
