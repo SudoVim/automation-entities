@@ -33,8 +33,8 @@ jobs:
 
     - name: Check formatting
       run: |
-        pipenv run black --check
-        pipenv run isort --check
+        pipenv run black --check .
+        pipenv run isort --check .
 
     - name: Check typing
       run: pipenv run python -m mypy automation_entities
