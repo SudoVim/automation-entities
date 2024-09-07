@@ -1,12 +1,9 @@
-.PHONY: all
-all: check test docs
-
 .PHONY: check
-check: mypy format-check
+check: pyright format-check test docs
 
-.PHONY: mypy
-mypy:
-	@pipenv run mypy automation_entities
+.PHONY: pyright
+pyright:
+	@pipenv run basedpyright --warnings
 
 .PHONY: format
 format:

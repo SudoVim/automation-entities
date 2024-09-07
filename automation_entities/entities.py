@@ -5,12 +5,14 @@ used as a way to log interactions with remote components.
 
 import functools
 import time
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypeVar
 
 from .context import Context, Subcontext
 
+D = TypeVar("D", bound=Callable)
 
-def describe(fcn: Callable) -> Callable:
+
+def describe(fcn: D) -> D:
     """
     Decorator for :class:`Entity` instance methods that will describe the
     method call to the entity's context on entrance and print its return

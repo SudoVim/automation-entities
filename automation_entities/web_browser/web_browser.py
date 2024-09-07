@@ -212,7 +212,9 @@ class WebBrowser(Entity):
                 result.log(f"URL: {self.driver.current_url}")
                 return self.driver.current_url
 
-    def wait_page(self, page: str, timeout: Timeout = None, baseurl=None):
+    def wait_page(
+        self, page: str, timeout: Timeout = None, baseurl: Optional[str] = None
+    ):
         """
         wait until we get to the desired page
         """

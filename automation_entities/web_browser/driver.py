@@ -1,6 +1,7 @@
 """
 module containing logic for creating the selenium webdriver
 """
+
 from typing import Literal, Optional
 
 import undetected_chromedriver as uc
