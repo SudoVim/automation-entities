@@ -32,17 +32,13 @@ jobs:
         pipenv install --dev
 
     - name: Check formatting
-      run: |
-        pipenv run black --check .
-        pipenv run isort --profile black --check-only .
+      run: make format-check
 
     - name: Check typing
-      run: pipenv run python -m mypy automation_entities
+      run: make pyright
 
     - name: Run tests
-      run: pipenv run python -m pytest --cov=automation_entities --cov-report=term-missing .
+      run: make test
 
     - name: Build docs
-      run: |
-        mkdir -p docs/build
-        pipenv run python -m sphinx.cmd.build . docs/build -c docs/
+      run: make docs
