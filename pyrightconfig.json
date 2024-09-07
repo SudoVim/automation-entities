@@ -1,0 +1,16 @@
+{
+  "venvPath": ".",
+  "exclude": [
+      "**/__pycache__",
+      "**/.*",
+      "**/tests/**",
+      "**/test_*/**",
+      "**/test_*.py",
+      "subs/**",
+      "**/automation_entities**",
+      "**/automation_traverse**"
+  ],
+  "pythonVersion": "3.8",
+  "reportAny": false,
+  "reportIncompatibleVariableOverride": false // flags too many class Meta overrides otherwise
+}
