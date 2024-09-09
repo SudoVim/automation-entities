@@ -7,6 +7,7 @@ class TestDownloadFile(WebBrowserTestCase):
     @patch("builtins.open")
     @patch("automation_entities.web_browser.web_browser.requests")
     def test_minimal(self, requests: MagicMock, mock_open: MagicMock) -> None:
+        self.driver.current_url = "https://example.com/some/path.html"
         self.driver.execute_script.return_value = "browser user agent"
         self.driver.get_cookies.return_value = [
             {
@@ -16,7 +17,7 @@ class TestDownloadFile(WebBrowserTestCase):
         ]
 
         s = requests.session.return_value
-        r = s.get.return_value
+        r = s.request.return_value
         r.content = "file-content"
 
         self.web_browser.download_file("file_url", "destination")
@@ -28,6 +29,16 @@ class TestDownloadFile(WebBrowserTestCase):
                     "subcontexts": [
                         {
                             "message": "<<< download_file file_url -> destination",
+                            "subcontexts": [
+                                {
+                                    "message": "WebBrowser https://example.com:",
+                                    "subcontexts": [
+                                        {
+                                            "message": "<<< request GET file_url",
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 }
@@ -39,10 +50,18 @@ class TestDownloadFile(WebBrowserTestCase):
         )
 
         self.assertEqual(call(), requests.session.mock_calls[0])
-        s.headers.update.assert_called_once_with(
-            {
-                "User-Agent": "browser user agent",
-            }
+        self.assertEqual(
+            [
+                call(
+                    {
+                        "User-Agent": "browser user agent",
+                        "Origin": "https://example.com",
+                        "Referer": "https://example.com/some/path.html",
+                    }
+                ),
+                call({}),
+            ],
+            s.headers.update.mock_calls,
         )
 
         s.cookies.update.assert_called_once_with(
@@ -51,7 +70,9 @@ class TestDownloadFile(WebBrowserTestCase):
             }
         )
 
-        s.get.assert_called_once_with("file_url", allow_redirects=True)
+        s.request.assert_called_once_with(
+            "GET", "https://example.com/file_url", allow_redirects=True
+        )
 
         mock_open.assert_called_once_with("destination", "wb")
 

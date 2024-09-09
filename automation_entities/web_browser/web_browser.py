@@ -4,7 +4,7 @@ the web browser itself
 
 import functools
 import urllib.parse
-from typing import Iterator, List, NamedTuple, Optional, Tuple, Union
+from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Union
 
 import requests
 from assertpy import assert_that
@@ -383,6 +383,43 @@ class WebBrowser(Entity):
             self.request(f"click")
             ActionChains(self.driver).click().perform()
 
+    def build_url(self, path: str) -> str:
+        """
+        Build URL out of our baseurl using the given *path*.
+        """
+        parsed = urllib.parse.urlparse(path)
+        if parsed.scheme or parsed.netloc:
+            return path
+
+        return self.baseurl.rstrip("/") + "/" + path.lstrip("/")
+
+    def raw_request(self, method: str, path: str, **kwds: Any) -> requests.Response:
+        """
+        Issue a request using the current user session info of the browser. In
+        this way, you can call APIs that require an active browser session
+        without having to click buttons or scrape rendered HTML.
+        """
+        with self.interaction():
+            self.request(f"request {method} {path}")
+
+            s = requests.session()
+
+            parsed = urllib.parse.urlparse(self.driver.current_url)
+            user_agent = self.driver.execute_script("return navigator.userAgent;")
+            headers = {
+                "User-Agent": user_agent,
+                "Origin": f"{parsed.scheme}://{parsed.netloc}",
+                "Referer": self.driver.current_url,
+            }
+            s.headers.update(headers)
+            s.headers.update(kwds.get("headers", {}))
+
+            for cookie in self.driver.get_cookies():
+                c = {cookie["name"]: cookie["value"]}
+                s.cookies.update(c)
+
+            return s.request(method, self.build_url(path), **kwds)
+
     def download_file(self, src: str, filepath: str) -> None:
         """
         Download the file with the given *src* URL to the given *filepath*.
@@ -392,17 +429,7 @@ class WebBrowser(Entity):
         with self.interaction():
             self.request(f"download_file {src} -> {filepath}")
 
-            s = requests.session()
-
-            user_agent = self.driver.execute_script("return navigator.userAgent;")
-            headers = {"User-Agent": user_agent}
-            s.headers.update(headers)
-
-            for cookie in self.driver.get_cookies():
-                c = {cookie["name"]: cookie["value"]}
-                s.cookies.update(c)
-
-            r = s.get(src, allow_redirects=True)
+            r = self.raw_request("GET", src, allow_redirects=True)
             with open(filepath, "wb") as fobj:
                 fobj.write(r.content)
 
