@@ -51,8 +51,8 @@ def try_timeout(
     timeout: Timeout = None,
     step: Optional[float] = None,
     step_exp: Optional[float] = None,
-    ignore_exceptions: Optional[Tuple] = None,
-    retry_action: Optional[Callable] = None,
+    ignore_exceptions: Optional[Tuple[Exception, ...]] = None,
+    retry_action: Optional[Callable[[], None]] = None,
 ) -> R:
     """
     Try running the given function until a timeout is reached.
