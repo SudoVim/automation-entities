@@ -52,6 +52,7 @@ class WebBrowser(Entity):
     .. automethod:: get_element_retry
 
     .. automethod:: move_to
+    .. automethod:: move_to_with_offset
     .. automethod:: click
 
     .. automethod:: download_file
@@ -366,6 +367,16 @@ class WebBrowser(Entity):
         with self.interaction():
             self.request(f"move_to {element}")
             ActionChains(self.driver).move_to_element(element.element).perform()
+
+    def move_to_with_offset(self, element: "Element", x: int = 0, y: int = 0) -> None:
+        """
+        Move to the given *element*.
+        """
+        with self.interaction():
+            self.request(f"move_to_with_offset {element} x={x} y={y}")
+            ActionChains(self.driver).move_to_element_with_offset(
+                element.element, x, y
+            ).perform()
 
     def scroll(self, x: int = 0, y: int = 0) -> None:
         """
