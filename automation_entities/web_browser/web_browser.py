@@ -4,7 +4,7 @@ the web browser itself
 
 import functools
 import urllib.parse
-from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Union
+from typing import Any, Callable, Iterator, List, NamedTuple, Optional, Tuple
 
 import requests
 from assertpy import assert_that
@@ -50,6 +50,7 @@ class WebBrowser(Entity):
     .. automethod:: get_elements
     .. automethod:: get_element
     .. automethod:: get_element_retry
+    .. automethod:: find_element_retry
 
     .. automethod:: move_to
     .. automethod:: move_to_with_offset
@@ -359,6 +360,21 @@ class WebBrowser(Entity):
             ),
             timeout=timeout,
         )
+
+    @describe
+    def find_element_retry(self, xpath: str, fcn: Callable[['Element'], bool], timeout: Timeout = None) -> "Element":
+        """
+        Query the elements denoted by the given *xpath* and run *fcn* against
+        each element to find the one desired until the given *timeout* is reached.
+        """
+        def find():
+            elements = self.get_elements(xpath)
+            for element in elements:
+                if fcn(element):
+                    return element
+
+            raise TryAgain
+        return try_timeout(find, timeout=timeout)
 
     def move_to(self, element: "Element") -> None:
         """
