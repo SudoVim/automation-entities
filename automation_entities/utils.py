@@ -4,7 +4,7 @@ library - namely, the :func:`try_timeout` function.
 """
 
 import time
-from typing import Any, Callable, Final, Optional, Tuple, TypeVar
+from typing import Callable, Final, Optional, Tuple, Type, TypeVar
 
 #: default value to display for a :class:`SecretString`
 SECRET_STRING_DISPLAY: Final[str] = "'" + ("*" * 10) + "'"
@@ -51,7 +51,7 @@ def try_timeout(
     timeout: Timeout = None,
     step: Optional[float] = None,
     step_exp: Optional[float] = None,
-    ignore_exceptions: Optional[Tuple[Exception, ...]] = None,
+    ignore_exceptions: Optional[Tuple[Type[Exception], ...]] = None,
     retry_action: Optional[Callable[[], None]] = None,
 ) -> R:
     """
