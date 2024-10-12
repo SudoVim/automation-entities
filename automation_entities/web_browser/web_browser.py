@@ -362,11 +362,14 @@ class WebBrowser(Entity):
         )
 
     @describe
-    def find_element_retry(self, xpath: str, fcn: Callable[['Element'], bool], timeout: Timeout = None) -> "Element":
+    def find_element_retry(
+        self, xpath: str, fcn: Callable[["Element"], bool], timeout: Timeout = None
+    ) -> "Element":
         """
         Query the elements denoted by the given *xpath* and run *fcn* against
         each element to find the one desired until the given *timeout* is reached.
         """
+
         def find():
             elements = self.get_elements(xpath)
             for element in elements:
@@ -374,6 +377,7 @@ class WebBrowser(Entity):
                     return element
 
             raise TryAgain
+
         return try_timeout(find, timeout=timeout)
 
     def move_to(self, element: "Element") -> None:
