@@ -464,6 +464,32 @@ class WebBrowser(Entity):
             with open(filepath, "wb") as fobj:
                 fobj.write(r.content)
 
+    def get_alert_text(self) -> str:
+        """
+        Get the text of the alert popup.
+        """
+        with self.interaction():
+            self.request("alert_text")
+            with self.result() as result:
+                result.log(self.driver.switch_to.alert.text)
+                return self.driver.switch_to.alert.text
+
+    def accept_alert(self) -> None:
+        """
+        Accept the current alert prompt.
+        """
+        with self.interaction():
+            self.request("accept_alert")
+            self.driver.switch_to.alert.accept()
+
+    def dismiss_alert(self) -> None:
+        """
+        Dismiss the current alert prompt.
+        """
+        with self.interaction():
+            self.request("dismiss_alert")
+            self.driver.switch_to.alert.dismiss()
+
 
 class Element(Entity):
     """
