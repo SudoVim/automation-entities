@@ -9,8 +9,6 @@ import json
 import os
 import typing
 
-from typing_extensions import Self
-
 
 class Subcontext:
     """
