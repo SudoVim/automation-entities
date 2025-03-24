@@ -7,7 +7,6 @@ import urllib.parse
 from typing import Any, Callable, Iterator, List, NamedTuple, Optional, Tuple
 
 import requests
-from assertpy import assert_that
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -593,7 +592,8 @@ class Element(Entity):
         """
         Assert that the given *attr* is the given *val*.
         """
-        assert_that(self.get_attribute(attr)).is_equal_to(val)
+        if self.get_attribute(attr) != val:
+            raise AssertionError(f"Attribute {attr} does not equal expected {val}")
 
     def clear(self) -> None:
         """

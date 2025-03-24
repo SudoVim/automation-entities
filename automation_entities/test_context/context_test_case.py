@@ -1,8 +1,6 @@
 from typing import Any, Dict, Iterator, List, NamedTuple, Optional
 from unittest.mock import MagicMock, call, create_autospec
 
-from assertpy import assert_that
-
 from ..context import Context
 from ..test_utils import UtilsTestCase
 
@@ -134,7 +132,8 @@ class SubcontextComparison(NamedTuple):
         """
         Return a given call's *c* log message.
         """
-        assert_that(c.args).is_length(1)
+        if len(c.args) != 1:
+            raise AssertionError(f"call {c} has more than one argument")
         return c.args[0]
 
     def as_dict(self) -> Dict[str, Any]:

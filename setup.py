@@ -41,7 +41,6 @@ _ = setup(
     install_requires=[
         "selenium<4.16,>=4.15.2",
         "requests<3,>=2.31.0",
-        "assertpy<2,>=1.1",
         "undetected-chromedriver<4,>=3.5.4",
     ],
     project_urls={
