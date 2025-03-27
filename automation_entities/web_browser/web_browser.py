@@ -576,6 +576,17 @@ class Element(Entity):
             timeout=timeout,
         )
 
+    def get_text(self) -> str:
+        """
+        Get the text of this element
+        """
+        with self.interaction():
+            self.request(f"text")
+            with self.result() as result:
+                text = self.element.text
+                result.log(f"{text}")
+                return text
+
     def get_attribute(self, attr: str) -> Optional[str]:
         """
         Return the attribute denoted by the given *attr* string.
