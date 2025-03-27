@@ -1,3 +1,7 @@
+.phony: install
+install:
+	@pipenv install --dev
+
 .PHONY: check
 check: pyright format-check test docs
 
@@ -9,6 +13,9 @@ pyright:
 format:
 	@pipenv run isort --profile black .
 	@pipenv run black .
+
+.PHONY: ci
+ci: format pyright
 
 .PHONY: format-check
 format-check:
