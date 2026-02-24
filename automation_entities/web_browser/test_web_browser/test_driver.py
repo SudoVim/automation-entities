@@ -30,7 +30,7 @@ class TestDriver(WebBrowserTestCase):
         )
 
         mock_create_webdriver.assert_called_once_with(
-            "chrome", headless=True, user_data_dir=None
+            "chrome", headless=True, user_data_dir=None, user_agent=None
         )
 
         self.driver.set_page_load_timeout.assert_called_once_with(30)
@@ -42,6 +42,7 @@ class TestDriver(WebBrowserTestCase):
         self.web_browser._driver = None
         self.web_browser.headless = False
         self.web_browser.user_data_dir = "/user/data/dir"
+        self.web_browser.user_agent = "user-agent"
         mock_create_webdriver.return_value = self.driver
 
         self.web_browser.driver
@@ -60,5 +61,8 @@ class TestDriver(WebBrowserTestCase):
         )
 
         mock_create_webdriver.assert_called_once_with(
-            "chrome", headless=False, user_data_dir="/user/data/dir"
+            "chrome",
+            headless=False,
+            user_data_dir="/user/data/dir",
+            user_agent="user-agent",
         )

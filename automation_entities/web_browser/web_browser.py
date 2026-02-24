@@ -61,6 +61,7 @@ class WebBrowser(Entity):
     baseurl: str
     browser: Browser
     user_data_dir: Optional[str]
+    user_agent: Optional[str]
     headless: bool
 
     _driver: Optional[WebDriver]
@@ -77,11 +78,13 @@ class WebBrowser(Entity):
         baseurl: str,
         browser: Browser = "chrome",
         user_data_dir: Optional[str] = None,
+        user_agent: Optional[str] = None,
         headless: bool = True,
     ):
         self.baseurl = baseurl
         self.browser = browser
         self.user_data_dir = user_data_dir
+        self.user_agent = user_agent
         self.headless = headless
 
         self._driver = None
@@ -112,6 +115,7 @@ class WebBrowser(Entity):
                     self.browser,
                     headless=self.headless,
                     user_data_dir=self.user_data_dir,
+                    user_agent=self.user_agent,
                 )
 
                 self._driver.set_page_load_timeout(30)
