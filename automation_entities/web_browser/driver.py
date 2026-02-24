@@ -16,6 +16,7 @@ Browser = Literal["chrome", "undetected-chrome"]
 def create_chrome_webdriver(
     headless: bool = False,
     user_data_dir: Optional[str] = None,
+    user_agent: Optional[str] = None,
     use_undetected: bool = False,
 ) -> webdriver.Chrome:
     """
@@ -27,6 +28,9 @@ def create_chrome_webdriver(
 
     if user_data_dir:
         options.add_argument(f"--user-data-dir={user_data_dir}")
+
+    if user_agent:
+        options.add_argument(f"--user-agent={user_agent}")
 
     if headless:
         options.add_argument("--headless")
@@ -67,15 +71,25 @@ def patch_undetected():
 
 
 def create_webdriver(
-    browser: Browser, headless: bool = False, user_data_dir: Optional[str] = None
+    browser: Browser,
+    headless: bool = False,
+    user_data_dir: Optional[str] = None,
+    user_agent: Optional[str] = None,
 ) -> WebDriver:
     """
     Create a webdriver from the given arguments.
     """
     if browser == "chrome":
-        return create_chrome_webdriver(headless=headless, user_data_dir=user_data_dir)
+        return create_chrome_webdriver(
+            headless=headless,
+            user_data_dir=user_data_dir,
+            user_agent=user_agent,
+        )
 
     if browser == "undetected-chrome":
         return create_chrome_webdriver(
-            headless=headless, user_data_dir=user_data_dir, use_undetected=True
+            headless=headless,
+            user_data_dir=user_data_dir,
+            user_agent=user_agent,
+            use_undetected=True,
         )
