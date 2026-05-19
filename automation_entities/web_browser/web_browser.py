@@ -3,6 +3,7 @@ the web browser itself
 """
 
 import functools
+import os
 import urllib.parse
 from typing import Any, Callable, Iterator, List, NamedTuple, Optional, Tuple
 
@@ -134,6 +135,18 @@ class WebBrowser(Entity):
             self.request("close")
             self.driver.close()
             self._driver = None
+
+    def quit(self) -> None:
+        """
+        Quit the browser.
+        """
+        with self.interaction():
+            self.request("quit")
+            pid = self.driver.service.process.pid
+            self.driver.quit()
+            self._driver = None
+
+            _ = os.waitpid(pid, os.WNOHANG)
 
     def refresh(self) -> None:
         """
