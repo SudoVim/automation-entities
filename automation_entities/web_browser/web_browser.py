@@ -146,7 +146,11 @@ class WebBrowser(Entity):
             self.driver.quit()
             self._driver = None
 
-            _ = os.waitpid(pid, os.WNOHANG)
+            try:
+                _ = os.waitpid(pid, os.WNOHANG)
+
+            except ChildProcessError:
+                pass
 
     def refresh(self) -> None:
         """
