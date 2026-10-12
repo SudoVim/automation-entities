@@ -127,7 +127,7 @@ class TestLoad(ConfigTestCase):
                 self.DEFAULTS,
                 **{
                     "new-key": "new-val",
-                }
+                },
             ),
             mock_fobj,
             sort_keys=True,

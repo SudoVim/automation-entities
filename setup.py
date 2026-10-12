@@ -2,7 +2,7 @@
 
 import pathlib
 
-from setuptools import setup  # pyright: ignore[reportUnknownVariableType]
+from setuptools import setup
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -39,9 +39,9 @@ _ = setup(
     },
     python_requires=">=3.8, <4",
     install_requires=[
-        "selenium<4.16,>=4.15.2",
-        "requests<3,>=2.31.0",
-        "undetected-chromedriver<4,>=3.5.4",
+        "selenium>=4.15.2",
+        "requests>=2.31.0",
+        "undetected-chromedriver>=3.5.4",
     ],
     project_urls={
         "Bug Reports": "https://github.com/SudoVim/automation-entities/issues",
