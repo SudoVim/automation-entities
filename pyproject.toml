@@ -29,6 +29,7 @@ Issues = "https://github.com/SudoVim/automation-entities/issues"
 dev = [
     "basedpyright>=1.40.2",
     "black>=26.10.1",
+    "bump2version>=1.0.1",
     "isort>=9.0.2",
     "pytest-cov>=7.1.0",
     "setuptools>=84.0.0",
