@@ -31,5 +31,6 @@ dev = [
     "black>=26.10.1",
     "isort>=9.0.2",
     "pytest-cov>=7.1.0",
+    "setuptools>=84.0.0",
     "sphinx>=8.1.3",
 ]
