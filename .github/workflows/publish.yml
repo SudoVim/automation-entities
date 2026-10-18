@@ -39,6 +39,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip pipenv
           pipenv install --dev
+          pipx install twine
 
       - name: Configure git
         run: |
@@ -47,7 +48,7 @@ jobs:
 
       - name: Bump version
         run: |
-          bump2version ${{ inputs.version }}
+          pipenv run bump2version ${{ inputs.version }}
 
       - name: Build package
         run: pipenv run python -m build
