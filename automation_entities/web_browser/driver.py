@@ -2,13 +2,14 @@
 module containing logic for creating the selenium webdriver
 """
 
-import subprocess
-from distutils.version import LooseVersion
+import os
 from typing import Literal, Optional
 
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
+
+from .patcher import Patcher
 
 Browser = Literal["chrome", "undetected-chrome"]
 
@@ -52,22 +53,8 @@ def patch_undetected():
     "undetected_chromedriver" module doesn't try to do this itself and bungle
     it.
     """
-    chrome_executable = uc.find_chrome_executable()
-    out = subprocess.check_output(
-        [
-            chrome_executable,
-            "--version",
-        ],
-    )
-
-    patcher = uc.Patcher()
-    patcher.version_full = LooseVersion(out.decode().split()[1])
-    patcher.version_main = patcher.version_full.version[0]
-    driver_executable_path = patcher.unzip_package(patcher.fetch_package())
-    if not patcher.patch():
-        raise AssertionError("Failed to patch chromedriver")
-
-    return driver_executable_path
+    patcher = Patcher()
+    return patcher.find_patch_chromedriver()
 
 
 def create_webdriver(
