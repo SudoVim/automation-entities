@@ -19,9 +19,6 @@ class Patcher(uc.Patcher):
         Find or patch chromedriver that works with the chrome/chromium version
         that's currently installed.
         """
-        import pdb
-
-        pdb.set_trace()
         self.load_versions_from_chrome()
 
         # First, check to see if we already have our binary installed +
